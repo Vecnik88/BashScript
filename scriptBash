@@ -1,0 +1,38 @@
+#!/bin/sh
+cd $HOME
+# mkdir $HOME/staticMC 			<---. если нужно создать директорию
+export DEST=$HOME/staticMC
+cd $DEST
+# mkdir $DEST/src
+# mkdir $DEST/lib
+# mkdir $DEST/include
+cd $DEST/src
+# mv ~/staticMC/slang-2.1.4.tar.gz $DEST/src
+# mv ~/staticMC/zlib-1.2.11.tar.gz $DEST/src
+# mv ~/staticMC/mc-4.7.5.2.tar.gz $DEST/src
+
+# wget https//... 			<--- указываем ссылку на исходники slang, если нужны
+tar zxf slang-2.1.4.tar.gz
+cd slang-2.1.4/
+./configure --prefix=$DEST --enable-static
+make clean -j7 && make -j7 && make static -j7
+cp -d $DEST/src/slang-2.1.4/src/objs/libslang.a $DEST/lib/
+cp -d $DEST/src/slang-2.1.4/src/*.h $DEST/include/
+cd ..
+
+# wget https//... 			<---. указываем ссылку на исходники zlib, если нужны
+tar zxf zlib-1.2.11.tar.gz
+cd zlib-1.2.11
+./configure --prefix=$DEST --static
+make clean -j7 && make -j7 && make static -j7
+cp -d $DEST/src/zlib-1.2.11/libz.a $DEST/lib/
+cp -d $DEST/src/zlib-1.2.11/*.h $DEST/include/
+cd ..
+
+# wget https//... 			<---. указываем ссылку на исходники mc, если нужны
+tar zxf mc-4.7.5.2.tar.gz
+cd mc-4.7.5.2/
+
+./configure --with-zlib-static --with-screen=slang --with-slang-includes=$DEST/include --with-slang-libs=$DEST/lib
+
+make clean -j7 && make -j7 && make install -j7
