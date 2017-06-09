@@ -38,3 +38,5 @@ cd mc-4.7.5.2/
 ./configure --with-zlib-static --with-screen=slang --with-slang-includes=$DEST/include --with-slang-libs=$DEST/lib
 
 make clean -j7 && make -j7 && make install -j7
+
+
