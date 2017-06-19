@@ -3,7 +3,6 @@
 	# Запуск qemu для arm архитектуры
 
 #!/bin/sh
-
 # Собираем ядро 
 
 # wget https://www.kernel.org/pub/linux/kernel/v4.0/linux-4.11.4.tar.bz2
