@@ -43,4 +43,4 @@ mv ~/Linux/linux-4.11.4/arch/arm/boot/zImage ~/Exp/
 cd ~/Exp/
 
 # Запускаем qemu 
-qemu-system-arm -M vexpress-a9 -m 256M -kernel zImage -initrd rootfs.img.gz -append "root=/dev/ram rdinit=/etc/init.d/rcS"
+QEMU_AUDIO_DRV=none qemu-system-arm -M vexpress-a9 -m 256M -kernel zImage -initrd rootfs.img.gz -append "console=/dev/ram0 rdinit=/etc/init.d/rcS"
