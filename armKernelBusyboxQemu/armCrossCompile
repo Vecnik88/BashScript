@@ -31,15 +31,16 @@ make -j 4 install
 cd _install
 mkdir proc sys dev etc etc/init.d
 
-touch /etc/init.d/rcS > "#!/bin/sh\nmount -t proc none /proc\nmount -t sysfs none /sys\n/sbin/mdev -s"
+echo "#!/bin/sh\nmount -t proc none /proc\nmount -t sysfs none /sys\n/sbin/mdev -s" > /etc/init.d/rcS
 
 chmod +x etc/init.d/rcS  
 
 find . | cpio -o --format=newc > ../rootfs.img
+cd ..
 gzip -c rootfs.img > rootfs.img.gz
 
 mv rootfs.img.gz ~/Exp/
 mv ~/Linux/linux-4.11.4/arch/arm/boot/zImage ~/Exp/
 cd ~/Exp/
 
-qemu-system-arm -M vexpress-a9 -m 256M -kernel zImage -initrd rootfs.img.gz -append "root=/dev/ram rdinit=/sbin/init"
+qemu-system-arm -M vexpress-a9 -m 256M -kernel zImage -initrd rootfs.img.gz -append "root=/dev/ram rdinit=/etc/init.d/rcS"
