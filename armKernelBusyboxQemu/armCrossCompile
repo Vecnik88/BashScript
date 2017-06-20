@@ -1,46 +1,42 @@
-	# Кросс-компиляция ядра для arm архитектуры
-	# Сборка busybox и корневой файловой системы
-	# Запуск qemu для arm архитектуры
+#			Created by Vecnnik88
+#		Скрипт для сборки ядра под архитектуру arm, 
+#	сборка корневой файловой системы, запуск на эмуляторе QEMU
 
-#!/bin/sh
-# Собираем ядро 
+mkdir LinuxArmKernelQemu
+cd LinuxArmKernelQemu
 
-# wget https://www.kernel.org/pub/linux/kernel/v4.0/linux-4.11.4.tar.bz2
+wget https://www.kernel.org/pub/linux/kernel/v4.0/linux-4.11.4.tar.xz
+tar -xvf linux-4.11.4.tar.xz
+
 export ARCH=arm					# <---. архитектура
 export CROSS_COMPILE=arm-linux-gnueabi-		# <---. кросс-компилятор
-tar -xvf linux-4.11.4.tar.xz
+
 cd linux-4.11.4
-make defconfig
+make vexpress_defconfig
 make -j 4 all
-cd ~/Linux
 
-# Собираем BusyBox
-
-# wget http://www.busybox.net/downloads/busybox-1.21.1.tar.bz2
-tar -xvf busybox-1.21.1.tar.bz2
+cd ..
+wget http://www.busybox.net/downloads/busybox-1.21.1.tar.xz
+tar -xvf busybox-1.21.1.tar.xz
 cd busybox-1.21.1
 make defconfig
 make menuconfig
 
-# В меню  выбираем статическую сборку 
+# 		Выбираем статическую сборку и сохраняем
+
 # Busybox Settings ==> Build Options
 # SELECT Build BusyBox as a static binary(no shared libs)
 
-make -j 4 install
+make -j4 install
 cd _install
 mkdir proc sys dev etc etc/init.d
-
-echo "#!/bin/sh\nmount -t proc none /proc\nmount -t sysfs none /sys\n/sbin/mdev -s" > /etc/init.d/rcS
-
-chmod +x etc/init.d/rcS  
-
+echo "#!/bin/sh \nmount -t proc none /proc \nmount -t sysfs none /sys \n/sbin/mdev -s" > etc/init.d/rcS
+chmod +x etc/init.d/rcS
 find . | cpio -o --format=newc > ../rootfs.img
 cd ..
-gzip -c rootfs.img > rootfs.img.gz
+gzip rootfs.img
+cd ..
 
-mv rootfs.img.gz ~/Exp/
-mv ~/Linux/linux-4.11.4/arch/arm/boot/zImage ~/Exp/
-cd ~/Exp/
+# Запускаем qemu - обязательно указать дерево устройств, без него не работает
 
-# Запускаем qemu 
-QEMU_AUDIO_DRV=none qemu-system-arm -M vexpress-a9 -m 256M -kernel zImage -initrd rootfs.img.gz -append "console=/dev/ram0 rdinit=/etc/init.d/rcS"
+QEMU_AUDIO_DRV=none qemu-system-arm -M vexpress-a9 -m 256M -kernel linux-4.11.4/arch/arm/boot/zImage -initrd busybox-1.21.1/rootfs.img.gz -append "root=/dev/ram rdinit=/sbin/init" -dtb linux-4.11.4/arch/arm/boot/dts/vexpress-v2p-ca9.dtb
