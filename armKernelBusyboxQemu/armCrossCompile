@@ -40,7 +40,3 @@ cd ..
 # Запускаем qemu - обязательно указать дерево устройств, без него не работает
 
 QEMU_AUDIO_DRV=none qemu-system-arm -M vexpress-a9 -m 256M -kernel linux-4.11.4/arch/arm/boot/zImage -initrd busybox-1.21.1/rootfs.img.gz -append "root=/dev/ram rdinit=/sbin/init" -dtb linux-4.11.4/arch/arm/boot/dts/vexpress-v2p-ca9.dtb
-
-
-
-
