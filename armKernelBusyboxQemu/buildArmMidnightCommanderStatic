@@ -1,5 +1,9 @@
 #		Скрипт статической сборки Midnight Commander
 
+
+
+
+
 cd
 mkdir -p BUILD/source
 cd BUILD/source
