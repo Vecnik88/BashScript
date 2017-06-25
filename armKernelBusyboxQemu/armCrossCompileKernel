@@ -2,10 +2,6 @@
 #		Скрипт для сборки ядра под архитектуру arm, 
 #	сборка корневой файловой системы, запуск на эмуляторе QEMU
 
-
-
-
-
 mkdir LinuxArmKernelQemu
 cd LinuxArmKernelQemu
 
