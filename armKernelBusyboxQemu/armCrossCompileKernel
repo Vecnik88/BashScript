@@ -14,7 +14,6 @@ export CROSS_COMPILE=arm-linux-gnueabi-		# <---. кросс-компилятор
 cd linux-4.11.4
 make vexpress_defconfig
 make -j 4 all
-
 cd ..
 wget http://www.busybox.net/downloads/busybox-1.21.1.tar.xz
 tar -xvf busybox-1.21.1.tar.xz
