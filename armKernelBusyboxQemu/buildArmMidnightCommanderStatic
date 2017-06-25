@@ -1,0 +1,97 @@
+#		Скрипт статической сборки Midnight Commander
+
+cd
+mkdir -p BUILD/source
+cd BUILD/source
+
+#	скачиваем необходимые исходники zlib, slang, glib, libffi
+
+# wget http://ftp.midnight-commander.org/mc-4.8.19.tar.bz2 
+tar -xjf mc-4.8.19.tar.bz2
+
+# wget https://github.com/libcheck/check/releases/download/0.11.0/check-0.11.0.tar.gz
+tar -xzf check-0.11.0.tar.gz
+
+# wget ftp://sourceware.org/pub/libffi/libffi-3.2.tar.gz
+tar -xzf libffi-3.2.tar.gz
+
+# wget http://www.zlib.net/zlib-1.2.11.tar.gz
+tar -xzf zlib-1.2.11.tar.gz
+
+# wget http://ftp.acc.umu.se/pub/gnome/sources/glib/2.53/glib-2.53.1.tar.xz
+tar -xpvJf glib-2.53.1.tar.xz
+
+# Лучше использовать S-lang вместо ncurses, S-Lang проще собирается
+# wget http://ftp.gnu.org/gnu/ncurses/ncurses-6.0.tar.gz
+# tar -xvzf ncurses-6.0.tar.gz
+
+# wget http://... 		<---. download source S-lang
+tar -xjf slang-2.1.4.tar.gz
+
+rm *.tar.*			# <---. удаляем все тарбары либо переносим их в укромное место
+
+cd check-0.11.0
+
+make clean
+ARCH=arm CC=arm-linux-gnueabihf-gcc ./configure --host=arm-linux-gnueabihf --prefix=/opt/check-0.11.0/ --enable-static=yes 
+make -j4
+sudo make install
+
+cd ../zlib-1.2.11
+
+make clean
+ARCH=arm CC=arm-linux-gnueabihf-gcc ./configure --prefix=/opt/zlib-1.2.11 --static 
+make -j4
+sudo make install
+
+cd ../ncurses-6.0
+
+# Сборка ncurses при помощи gcc 5 выдаёт ошибку. Чтобы её устранить, достаточно в файле 
+# MKlib_gen.sh в нужной строке добавить параметр -P:
+# cd ncurses/base
+# vim MKlib_gen.sh
+# добавляем вот эту строку : preprocessor="$1 -P -DNCURSES_INTERNALS -I../include"
+# дальше собираем
+
+cd ../../
+make clean
+ARCH=arm CC=arm-linux-gnueabihf-gcc ./configure --target=arm-linux-gnueabihf --with-gcc=arm-linux-gnueabihf-gcc --host=arm-linux-gnueabihf --prefix=/opt/ncurses-6.0 --enable-static=yes 
+make -j4 
+sudo make install
+
+cd ../glib-2.53.1
+
+echo "glib_cv_stack_grows=no" > arm-linux.cache
+echo "glib_cv_uscore=no" >> arm-linux.cache
+echo "ac_cv_func_posix_getpwuid_r=no" >> arm-linux.cache
+echo "ac_cv_func_posix_getgrgid_r=no" >> arm-linux.cache
+
+ARCH=arm CC=arm-linux-gnueabihf-gcc ./configure ZLIB_CFLAGS="-I/opt/zlib-1.2.11/include/" ZLIB_LIBS="-L/opt/zlib-1.2.11/lib -lz" LIBFFI_CFLAGS="-I/opt/libffi-3.2/lib/libffi-3.2/include" LIBFFI_LIBS="-L/opt/libffi-3.2/lib -lffi" --host=arm-linux-gnueabihf --prefix=/opt/glib-2.53.1 --enable-static=yes --cache-file=arm-linux.cache --with-pcre
+make -j4
+sudo make install
+
+cd ../mc-4.8.19
+
+ARCH=arm CC=arm-linux-gnueabihf-gcc ./configure CHECK_CFLAGS="-I/opt/check-0.11.0/include/" CHECK_LIBS="-L/opt/check-0.11.0/lib/ -lcheck" GLIB_CFLAGS="-I/opt/glib-2.53.1/include/glib-2.0 -I/opt/glib-2.53.1/lib/glib-2.0/include" GLIB_LIBS="-L/opt/glib-2.53.1/lib -lglib-2.0" GMODULE_CFLAGS="-I/opt/glib-2.53.1/include/glib-2.0 -I/opt/glib-2.53.1/lib/glib-2.0/include" GMODULE_LIBS="-L/opt/glib-2.53.1/lib/glib-2.0 -lgmodule-2.0" --host=arm-linux-gnueabihf --prefix=/opt/mc-4.8.19 --enable-static=yes --with-screen=ncurses --with-ncurses-includes="/opt/ncurses-6.0/include" --with-ncurses-libs="/opt/ncurses-6.0/lib" --with-glib-static
+make -j4
+sudo make install
+
+# Дальнейшие действия
+
+cp -R /opt/check-0.11.0 /home/user/rootfs/opt/
+cp -R /opt/glib-2.53.1 /home/user/rootfs/opt/
+cp -R /opt/libffi-3.2 /home/user/rootfs/opt/
+cp -R /opt/mc-4.8.19 /home/user/rootfs/opt/
+cp -R /opt/ncurses-6.0 /home/user/rootfs/opt/
+cp -R /opt/zlib-1.2.11 /home/user/rootfs/opt/
+
+mkdir /home/user/rootfs/lib
+cp /usr/arm-linux-gnueabihf/lib/ld-linux-armhf.so.3 /home/user/rootfs/lib/
+cp /usr/arm-linux-gnueabihf/lib/ld-2.23.so /home/user/rootfs/lib/
+cp /usr/arm-linux-gnueabihf/lib/libc.so.6 /home/user/rootfs/lib/
+cp /usr/arm-linux-gnueabihf/lib/libc-2.23.so /home/user/rootfs/lib/
+mkdir /home/user/rootfs/usr/lib
+cp /usr/arm-linux-gnueabihf/lib/libpthread.so /home/user/rootfs/usr/lib/
+cp /usr/arm-linux-gnueabihf/lib/libpthread.so.0 /home/user/rootfs/usr/lib/
+cp /usr/arm-linux-gnueabihf/lib/libpthread-2.23.so /home/user/rootfs/usr/lib/
+
