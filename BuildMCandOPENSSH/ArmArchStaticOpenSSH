@@ -36,3 +36,6 @@ sudo make install
 # Makefile:309: ошибка выполнения рецепта для цели «check-config»
 # make: [check-config] Ошибка 255 (игнорирование)
 
+
+
+
