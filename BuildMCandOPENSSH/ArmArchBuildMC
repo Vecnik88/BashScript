@@ -1,0 +1,67 @@
+#!/bin/bash
+wget http://ftp.midnight-commander.org/mc-4.8.19.tar.bz2
+tar -xjf mc-4.8.19.tar.bz2
+
+wget https://github.com/libcheck/check/releases/download/0.11.0/check-0.11.0.tar.gz
+tar -xvzf check-0.11.0.tar.gz
+
+wget ftp://sourceware.org/pub/libffi/libffi-3.2.tar.gz
+tar -xvzf libffi-3.2.tar.gz
+
+wget http://www.zlib.net/zlib-1.2.11.tar.gz
+tar -xvzf zlib-1.2.11.tar.gz
+
+wget http://ftp.acc.umu.se/pub/gnome/sources/glib/2.53/glib-2.53.1.tar.xz
+tar -xpvJf glib-2.53.1.tar.xz
+
+wget http://ftp.gnu.org/gnu/ncurses/ncurses-6.0.tar.gz
+tar -xvzf ncurses-6.0.tar.gz
+rm *.tar.*
+
+# собираем check
+cd check-0.11.0
+ARCH=arm CC=arm-linux-gnueabihf-gcc ./configure --host=arm-linux-gnueabihf --prefix=/opt/check-0.11.0/ --enable-static=yes 
+make -j2
+sudo make install
+
+# собираем libffi
+cd ../libffi-3.2
+ARCH=arm CC=arm-linux-gnueabihf-gcc ./configure --host=arm-linux-gnueabihf --prefix=/opt/libffi-3.2 --enable-static=yes
+make -j2
+sudo make install
+
+# собираем ZLIB
+cd ../zlib-1.2.11
+ARCH=arm CC=arm-linux-gnueabihf-gcc CFLAGS="$CFLAGS -fPIC" ./configure --prefix=/opt/zlib-1.2.11 --static
+make -j2 CFLAGS="$CFLAGS -fPIC"
+sudo make install
+
+# build ncurses
+cd ../ncurses-6.0
+ARCH=arm CC=arm-linux-gnueabihf-gcc ./configure --target=arm-linux-gnueabihf --with-gcc=arm-linux-gnueabihf-gcc --host=arm-linux-gnueabihf --prefix=/opt/ncurses-6.0 --enable-static=yes
+make -j2
+sudo make install
+#	!!! Ошибка при сборке ncurses !!!
+#	Running /usr/bin/tic to install /opt/ncurses-6.0/share/terminfo ...
+
+#	You may see messages regarding extended capabilities, e.g., AX.
+#	These are extended terminal capabilities which are compiled
+#	using
+#		tic -x
+#	If you have ncurses 4.2 applications, you should read the INSTALL
+#	document, and install the terminfo without the -x option.
+
+# /usr/bin/tic: invalid option -- 'x'
+
+# build glib
+cd ../glib-2.53-1
+ARCH=arm CC=arm-linux-gnueabihf-gcc ./configure ZLIB_CFLAGS="-I/opt/zlib-1.2.11/include/" ZLIB_LIBS="-L/opt/zlib-1.2.11/lib -lz" LIBFFI_CFLAGS="-I/opt/libffi-3.2/lib/libffi-3.2/include" LIBFFI_LIBS="-L/opt/libffi-3.2/lib -lffi" --host=arm-linux-gnueabihf --prefix=/opt/glib-2.53.1 --enable-static=yes --cache-file=arm-linux.cache --with-pcre --enable-shared
+make -j4
+sudo make install
+
+# При сборке glib возникает ошибка !!!!!!!!
+
+# libtool: warning: '/opt/libffi-3.2/lib/libffi.la' seems to be moved
+# /usr/lib/gcc-cross/arm-linux-gnueabihf/5/../../../../arm-linux-gnueabihf/bin/ld: cannot find -
+# lmount
+

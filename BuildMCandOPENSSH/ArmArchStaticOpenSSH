@@ -1,0 +1,38 @@
+#!/bin/bash
+wget https://mirror.yandex.ru/pub/OpenBSD/OpenSSH/portable/openssh-7.5p1.tar.gz
+tar -xvzf openssh-7.5p1.tar.gz
+
+wget https://www.openssl.org/source/openssl-1.0.2k.tar.gz
+tar -xvzf openssl-1.0.2k.tar.gz
+
+wget http://www.zlib.net/zlib-1.2.11.tar.gz
+tar -xvzf zlib-1.2.11.tar.gz
+rm -f *.tar.*
+
+cd zlib-1.2.11/
+# Собираем статичеси ZLIB
+ARCH=arm cross=arm-linux-gnueabihf- CC="${cross}gcc" AR="${cross}ar" RANLIB="${cross}ranlib" CFLAGS="$CFLAGS -fPIC" ./configure --prefix=/opt/zlib-1.2.11 --static
+make -j2 CFLAGS="$CFLAGS -fPIC"
+sudo make install
+
+cd ../openssl-1.0.2k
+# Собираем статически openSSL
+ARCH=arm cross=arm-linux-gnueabihf- CC="${cross}gcc" AR="${cross}ar" RANLIB="${cross}ranlib" ./Configure dist -fPIC --prefix=/opt/openssl-1.0.2k
+make -j2
+sudo make install
+
+cd ../openssh-7.5p1
+# Собираем статически openSSH
+ARCH=arm cross=arm-linux-gnueabihf- CC="${cross}gcc" AR="${cross}ar" RANLIB="${cross}ranlib" ./Configure dist -fPIC --prefix=/opt/openssl-1.0.2k
+make -j2
+sudo make install
+
+# При выполнении команды openSSH sudo make install - возникает ошибка
+# Нужно разобраться почему ищет в /lib а не в /usr/arm-linux-gnueabihf/lib
+
+#			!!!! Ошибка !!!!
+
+# /lib/ld-linux-armhf.so.3: No such file or directory
+# Makefile:309: ошибка выполнения рецепта для цели «check-config»
+# make: [check-config] Ошибка 255 (игнорирование)
+
