@@ -64,6 +64,3 @@ sudo make install
 # libtool: warning: '/opt/libffi-3.2/lib/libffi.la' seems to be moved
 # /usr/lib/gcc-cross/arm-linux-gnueabihf/5/../../../../arm-linux-gnueabihf/bin/ld: cannot find -
 # lmount
-
-
-
