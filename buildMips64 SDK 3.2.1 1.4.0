@@ -1,0 +1,51 @@
+# Сборка прошивки
+
+# Необходимо доставить пакеты
+
+  sudo apt-get install libglib2.0-dev flex bison make automake libtool cmake build-essential pkg-config gawk
+# Также понадобится пакет для сборки мультиобраза:
+
+  sudo apt-get install uboot-mkimage(или u-boot-tools) 
+# Также понадобится пакет для компиляции защищенных образов:
+
+  sudo apt-get install libssl-dev
+# Также понадобится для 64-разрядных систем:
+
+  sudo apt-get install libc6-dev-i386 g++-multilib
+# Для валидации XML-файлов clish при сборке нужен xmllint:
+
+  sudo apt-get install libxml2-utils
+# В ubuntu 14.04 также необходимо устанавливать lib32z1 и lib32z1-dev
+
+# Ссылка sh должна указывать на bash. Сначала проверим, запустив команду
+  ll /bin | grep sh
+# -rwxr-xr-x 1 root root 920788 Mar 29 2013 bash*
+# -rwxr-xr-x 1 root root 100284 Mar 30 2012 dash*
+# lrwxrwxrwx 1 root root 4 Mar 29 2013 rbash -> bash*
+# lrwxrwxrwx 1 root root 4 Feb 13 11:51 sh -> dash*
+# lrwxrwxrwx 1 root root 4 Feb 12 13:59 sh.distrib -> dash*
+# lrwxrwxrwx 1 root root 7 Nov 17 2012 static-sh -> busybox*
+
+# Как видим, sh указывает на dash. Это можно испрпавить следующим образом.
+# Разлинковать имеющуюся ссылку командой: sudo unlink /bin/sh
+# Создать новую ссылку: 
+
+  sudo ln -s bash ./sh # (эту команду нужно выполнять, находясь в папке /bin)
+# Проверяем:
+  ll /bin | grep sh
+# -rwxr-xr-x 1 root root 920788 Mar 29 2013 bash*
+# -rwxr-xr-x 1 root root 100284 Mar 30 2012 dash*
+# lrwxrwxrwx 1 root root 4 Mar 29 2013 rbash -> bash*
+# lrwxrwxrwx 1 root root 4 Feb 13 11:51 sh -> bash*
+# lrwxrwxrwx 1 root root 4 Feb 12 13:59 sh.distrib -> dash*
+# lrwxrwxrwx 1 root root 7 Nov 17 2012 static-sh -> busybox*
+
+# Подобным образом, нужно добавить и ссылку gmake:
+# /bin/gmake -> /usr/bin/make
+  sudo ln -s /usr/bin/make /bin/gmake
+  
+BRANCH=""         # наша ветка
+
+git clone --branch=${BRANCH} --depth=1 -- $USER@swlabsrv:/var/SVNrepo/git_repo/npu/broadcom/toolchains_bin ~/toolchains_bin
+sudo mkdir -p /opt/broadcom-sdk-3.2.1 
+sudo ln -s -t /opt/broadcom-sdk-3.2.1 ~/toolchains_bin
