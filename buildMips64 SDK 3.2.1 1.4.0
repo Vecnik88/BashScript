@@ -106,4 +106,34 @@ setenv serverip 10.100.100.1          # задаем ип сервера
 setenv ipaddr 10.100.100.2            # задаем ип маршрутизатора(платы и тд)
 saveenv                               # сохраняем наши настройки
   
-  
+# все остальные параметры были настроены по умолчанию - так что поднимаем tftp сервер и делаем run netboot
+# настройка адреса под сетевой интерфейс
+
+  sudo ifconfig enp2s14:1 10.100.100.1 
+ # Устнавливаем tftp сервер на локальной машине:
+
+  sudo apt-get install tftpd-hpa
+
+# Создаем папку для tftp:
+
+  sudo mkdir /home/tftp
+# Делаем пользователя tftp владельцем папки:
+
+  sudo chown -R tftp:tftp /home/tftp
+# Config файл tftpd сервера лежит тут /etc/default/tftpd-hpa
+# Устанавливаем там нужный IP адрес и папку:
+
+# TFTP_USERNAME="tftp"
+  # TFTP_DIRECTORY="/home/tftp"
+  # TFTP_ADDRESS="0.0.0.0:69″
+
+# Рестартуем tftpd-hpa сервер:
+
+  sudo service tftpd-hpa restart
+
+# Складываем файл firmware в /home/tftp/esr1000/
+
+# Теперь можно загрузиться
+# u-boot# run bootcmd
+
+# Наблюдаем плоды своей работы :)
