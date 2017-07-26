@@ -1,3 +1,4 @@
+#!/bin/bash
 # Сборка прошивки
 
 # Необходимо доставить пакеты
@@ -44,8 +45,22 @@
 # /bin/gmake -> /usr/bin/make
   sudo ln -s /usr/bin/make /bin/gmake
   
-BRANCH=""         # наша ветка
+  BRANCH=""         # наша ветка
 
-git clone --branch=${BRANCH} --depth=1 -- $USER@swlabsrv:/var/SVNrepo/git_repo/npu/broadcom/toolchains_bin ~/toolchains_bin
-sudo mkdir -p /opt/broadcom-sdk-3.2.1 
-sudo ln -s -t /opt/broadcom-sdk-3.2.1 ~/toolchains_bin
+  git clone --branch=${BRANCH} --depth=1 -- $USER@swlabsrv:/var/SVNrepo/git_repo/npu/broadcom/toolchains_bin ~/toolchains_bin
+  sudo mkdir -p /opt/broadcom-sdk-3.2.1 
+  sudo ln -s -t /opt/broadcom-sdk-3.2.1 ~/toolchains_bin
+
+  export PATH=$PATH:/opt/broadcom-sdk-3.2.1/toolchains_bin/mipscross/linux/bin
+  export PATH=$PATH:/opt/broadcom-sdk-3.2.1/toolchains_bin/mipscross/elf/bin
+
+  ADDR=""   # задать что клонируем
+  git clone --branch=1.4.0 ${ADDR}
+
+  ./prepare_working_copy.sh
+# Дальнейшая сборка происходит из директории sdk-base/buildroot:
+
+  cd sdk-base/buildroot
+# Конфигурирование платы:
+
+  make config-esr1000
