@@ -1,11 +1,6 @@
 #!/bin/bash
 # Сборка прошивки для плат esr200, esr1000
 
-
-
-
-
-
 # Необходимо доставить пакеты
 
   sudo apt-get install libglib2.0-dev flex bison make automake libtool cmake build-essential pkg-config gawk
