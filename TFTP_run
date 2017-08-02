@@ -1,0 +1,8 @@
+#!/bin/bash
+# скрипт настройки сетевого интерфейса и запуска tftp сервера для передачи firmware
+# запускать с правами root
+
+sudo su root
+cp esr-sdk-3-x-x/sdk-base/buildroot/output/images/mips64/firmware /home/tftp/esr1000/
+ifconfig eth1 10.100.100.1
+service tftpd-hpa restart
