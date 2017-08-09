@@ -1,0 +1,14 @@
+#!/bin/sh
+# сборка ldk-project for mips arch
+
+YOU_BRANCH=""
+
+# доставить необходимые пакеты
+
+sudo apt-get install device-tree-compiler
+sudo apt-get install xsltproc
+
+git clone --branch={YOUR_BRANCH} Project_ldk_1.4.0
+cd Project_ldk_1.4.0
+./prepare_working_copy.sh
+make config-esr12v && make uboot && make linux-userspace && make apps-all && make firmware-initramfs
