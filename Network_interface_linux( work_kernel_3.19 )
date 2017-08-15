@@ -42,5 +42,4 @@ PER CPU IS NOT OK:
 	interface gi1_%d(port)			linux/linux-3.19.65/drivers/net/ethernet/broadcom/gmac/src/et/sys/et_linux.c:	---> per cpu is not OK
 	interface eth%d (eth)			linux/linux-3.19.65/drivers/net/ethernet/8390/lib8390.c 			---> per cpu is not OK
 	interface( no name )			linux/linux-3.19.65/drivers/net/ppp/ppp_generic.c ---> ppp_generic.c - для протокола реализует виртуальный сетевой интерфейс PPP/PPTP, реализовано большое количество различных спинлоков, мьютексов и тд. Per Cpu счетчиков нет.
-
 	L2TP3v3					linux/linux-3.19.65/net/l2tp/l2tp_eth.c 
