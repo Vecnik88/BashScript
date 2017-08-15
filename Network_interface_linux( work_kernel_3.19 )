@@ -36,10 +36,7 @@ PER CPU OK:
 
 	interface br%d 				linux/linux-3-19-65/net/bridge/br_device.c 			---> per cpu OK;
 	Logical( veth )				linux/linux-3-19-65/drivers/net/veth.c 				---> per cpu OK:
-						linux/linux-3-19-65/drivers/netvirtio_net.c 			---> per cpu OK;
-
-
-
+	---------------				linux/linux-3-19-65/drivers/netvirtio_net.c 			---> per cpu OK;
 
 PER CPU IS NOT OK:
 	interface gi1_%d(port)			linux/linux-3.19.65/drivers/net/ethernet/broadcom/gmac/src/et/sys/et_linux.c:	---> per cpu is not OK
