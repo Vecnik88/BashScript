@@ -1,9 +1,9 @@
 Type network interface:
 
-	lo 									нашел ( linux/linux-3-19-65/drivers/net/loopback.c )
+	lo 								нашел ( linux/linux-3-19-65/drivers/net/loopback.c )
 	dummy0								нашел ( linux/linux-3-19-65/drivers/net/dummy.c )
-	eth%d( with 0-3 )					нашел ( linux/linux-3.19.65/drivers/net/ethernet/8390/lib8390.c )
-	gi1_%d( with 1-6 )					нашел ( linux/linux-3.19.65/drivers/net/ethernet/broadcom/gmac/src/et/sys/et_linux.c )
+	eth%d( with 0-3 )						нашел ( linux/linux-3.19.65/drivers/net/ethernet/8390/lib8390.c )
+	gi1_%d( with 1-6 )						нашел ( linux/linux-3.19.65/drivers/net/ethernet/broadcom/gmac/src/et/sys/et_linux.c )
 	vlan 								нашел ( linux/linux-3-19-65/net/8021q/vlan_dev.c )
 	tunl0								нашел ( linux/linux-3-19-65/net/ipv4/ipip.c )
 	gre0 								нашел ( linux/linux-3-19-65/net/ipv4/ip_gre.c )
@@ -13,20 +13,20 @@ Type network interface:
 	ip6tnl0								нашел ( linux/linux-3-19-65/net/ipv6/ip6_tunnel.c )
 	ip6gre0								нашел ( linux/linux-3-19-65/net/ipv6/ip6_gre.c )
 
-	bridge && po 						нашел ( linux/linux-3-19-65/net/openvswitch/vport-nternal-dev.c )
+	bridge && po 							нашел ( linux/linux-3-19-65/net/openvswitch/vport-nternal-dev.c )
 
 Tunnel:
 	L2TP3v3								нашел ( Linux/linux-3.19.65/net/l2tp/l2tp_eth.c )
-	GRE ( SoftGre ; Sub SoftGre )		нашел ( linux/linux-3-19-65/net/ipv4/ip_gre.c )
-	IPv4-over-IPv4						нашел ( linux/linux-3-19-65/net/ipv4/ipip.c )
-	Logical ( veth )					нашел ( linux/linux-3-19-65/drivers/net/veth.c )
+	GRE ( SoftGre ; Sub SoftGre )					нашел ( linux/linux-3-19-65/net/ipv4/ip_gre.c )
+	IPv4-over-IPv4							нашел ( linux/linux-3-19-65/net/ipv4/ipip.c )
+	Logical ( veth )						нашел ( linux/linux-3-19-65/drivers/net/veth.c )
 	PPTP								нашел ( linux/linux-3.19.65/drivers/net/ppp/ppp_generic.c )
 
 PER CPU OK:
 	interface lo 			linux/linux-3-19-65/drivers/net/loopback.c 				---> per cpu OK;
 	interface dummy0		linux/linux-3-19-65/drivers/net/dummy.c 				---> per cpu OK;
 	interface tunl0			linux/linux-3-19-65/net/ipv4/ipip.c 					---> per cpu OK;
-	interface sit0			linux/linux-3-19-65/net/ipv6/sit.c						---> per cpu OK;
+	interface sit0			linux/linux-3-19-65/net/ipv6/sit.c					---> per cpu OK;
 	interface ip6gre0		linux/linux-3-19-65/net/ipv6/ip6_gre.c 					---> per cpu OK;
 	interface ip6tnl0		linux/linux-3-19-65/net/ipv6/ip6_tunnel.c 				---> per cpu OK;
 	interface ip_vti0		linux/linux-3-19-65/net/ipv4/ip_vti.c 					---> per cpu OK;
@@ -36,7 +36,7 @@ PER CPU OK:
 
 	interface br%d 			linux/linux-3-19-65/net/bridge/br_device.c 				---> per cpu OK;
 	Logical( veth )			linux/linux-3-19-65/drivers/net/veth.c 					---> per cpu OK:
-	----------------		linux/linux-3-19-65/drivers/netvirtio_net.c 			---> per cpu OK;
+	----------------		linux/linux-3-19-65/drivers/netvirtio_net.c 				---> per cpu OK;
 
 	bridge && po 			linux/linux-3-19-65/net/openvswitch/vport-nternal-dev.c ---> per cpu OK( но сделано довольно путанно );
 
@@ -44,11 +44,11 @@ PER CPU IS NOT OK:
 	interface gi1_%d(port)	linux/linux-3.19.65/drivers/net/ethernet/broadcom/gmac/src/et/sys/et_linux.c:	---> per cpu is not OK
 	interface eth%d (eth)	linux/linux-3.19.65/drivers/net/ethernet/8390/lib8390.c 						---> per cpu is not OK
 
-	interface( no name )	linux/linux-3.19.65/drivers/net/ppp/ppp_generic.c 	---> ppp_generic.c - для протокола реализует виртуальный сетевой интерфейс PPP/PPTP, реализовано большое количество различных спинлоков, мьютексов и тд. Per Cpu счетчиков нет.
+	interface( no name )	linux/linux-3.19.65/drivers/net/ppp/ppp_generic.c 				---> ppp_generic.c - для протокола реализует виртуальный сетевой интерфейс PPP/PPTP, реализовано большое количество различных спинлоков, мьютексов и тд. Per Cpu счетчиков нет.
 
 	L2TP3v3					linux/linux-3.19.65/net/l2tp/l2tp_eth.c 										---> per cpu is not OK
 
 
 ERROR:
 	/* ERROR !!! port channel			linux/linux-3.19.65/net/openvswitch/datapath.c 			---> per cpu OK; - !!! ERROR */
-	/* ERROR !!! bridge					linux/linux-3-19-65/net/bridge/br_device.c - !!! ERROR */
+	/* ERROR !!! bridge				linux/linux-3-19-65/net/bridge/br_device.c - !!! ERROR */
