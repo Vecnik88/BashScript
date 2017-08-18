@@ -5,5 +5,3 @@ Create an L2TPv3 tunnel over UDP:
 Create an L2TPv3 session:
 
 	ip l2tp add session tunnel_id 1 session_id 10 peer_session_id 10
-
-
