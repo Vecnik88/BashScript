@@ -1,0 +1,7 @@
+Create an L2TPv3 tunnel over UDP:
+
+	ip l2tp add tunnel tunnel_id 1 peer_tunnel_id 1 udp_sport 5000 udp_dport 5000 encap udp local 10.100.100.2 remote 10.100.100.1
+
+Create an L2TPv3 session:
+
+	ip l2tp add session tunnel_id 1 session_id 10 peer_session_id 10
