@@ -74,9 +74,3 @@ site-A:# ping 10.42.1.2
        site-B:# modprobe nf_defrag_ipv4
 
        If L2TP is being used over IPv6, use the IPv6 defrag module.
-
-
-
-
-
-
