@@ -13,6 +13,8 @@ site-B:# ip link set l2tpeth0 up mtu 1488
 
 Configure as IP interfaces
 
+
+
 	The two interfaces can be configured with IP addresses if only IP data
 	is to be carried. This is perhaps the simplest configuration.
 
