@@ -1,0 +1,24 @@
+#!/bin/bash
+# Сборка проекта esr-ldk
+
+cd ~/esr-ldk-4-1-x
+make clean
+make config-esr10
+make uboot
+make linux-userspace
+make apps-all
+if [[ $? ]] ; then 
+	make firmware-initramfs
+else
+	make apps-all
+	if [[ $? ]] ; then 
+		make firmware-initramfs
+	else
+		make apps-all
+		if [[ $? ]] ; then 
+			make firmware-initramfs
+		fi
+	fi
+fi
+
+echo "BUILD ESR-10 DONE\n"
