@@ -8,17 +8,19 @@ make uboot
 make linux-userspace
 make apps-all
 if [[ $? ]] ; then 
-	make firmware-initramfs
-else
 	make apps-all
-	if [[ $? ]] ; then 
-		make firmware-initramfs
-	else
-		make apps-all
 		if [[ $? ]] ; then 
+			make apps-all
+			if [[ $? ]] ; then
+				make apps-all
+			else
+				make firmware-initramfs
+			fi
+		else
 			make firmware-initramfs
 		fi
-	fi
+else
+	make firmware-initramfs
 fi
 
-echo "BUILD ESR-10 DONE\n"
+echo "BUILD ESR-10 DONE"
