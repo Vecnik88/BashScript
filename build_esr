@@ -11,11 +11,11 @@ if [[ $? -eq 0 ]] ; then
 	make firmware-initramfs
 else
 	make apps-all
-	if [[ $? ]] ; then 
+	if [[ $? -eq 0 ]] ; then 
 		make firmware-initramfs
 	else
 		make apps-all
-		if [[ $? ]] ; then 
+		if [[ $? -eq 0 ]] ; then 
 			make firmware-initramfs
 		fi
 	fi
