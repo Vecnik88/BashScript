@@ -4,8 +4,20 @@
 cd ~/esr-ldk-4-1-x
 make clean
 make config-esr10
+if [[ $? -eq 0 ]] ; then
+	echo "ERROR config-esr10"
+	exit 1
+fi
 make uboot
+if [[ $? -eq 0 ]] ; then
+	echo "ERROR uboot"
+	exit 1
+fi
 make linux-userspace
+if [[ $? -eq 0 ]] ; then
+	echo "ERROR linux-userspace"
+	exit 1
+fi
 make apps-all
 if [[ $? -eq 0 ]] ; then 
 	make firmware-initramfs
