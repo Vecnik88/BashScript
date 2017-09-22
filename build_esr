@@ -37,5 +37,5 @@ else
 	fi
 fi
 
-echo "BUILD ESR-10 DONE"
+echo "BUILD ESR DONE"
 exit 0
