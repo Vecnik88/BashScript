@@ -1,7 +1,9 @@
 #!/bin/bash
-# Сборка проекта esr10/12V
 
-# $1 - в качестве параметра необходимо передать config-esr10 config-esr12V
+# 					### Сборка проекта esr10/12V ###
+
+# $1 - в качестве параметра необходимо передать config esr 
+# для которого планируете осуществлять сборку (config-esr10; config-esr12V)
 
 cd ~/esr-ldk-4-1-x
 make clean
@@ -35,5 +37,5 @@ else
 	fi
 fi
 
-echo "BUILD ESR-10 DONE\n"
+echo "BUILD ESR-10 DONE"
 exit 0
