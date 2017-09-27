@@ -10,7 +10,7 @@ make clean
 make unconfig
 make $1
 if [[ $? != 0 ]] ; then
-	echo "ERROR config-esr10"
+	echo "ERROR: input configuration with build esr: config-esr10 or config-esr12V"
 	exit 1
 fi
 make uboot
