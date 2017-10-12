@@ -47,14 +47,15 @@ make apps-all
 if [[ $? -eq 0 ]] ; then 
 	make apps-fs
 else
-	echo "ERROR: apps-fs"
-	exit 1
-fi
-
-make apps-fs
-if [[ $? != 0 ]] ; then
-	echo "ERROR: apps-fs"
-	exit 1
+	make apps-all
+	if [[ $? -eq 0 ]] ; then 
+		make apps-fs
+	else
+		make apps-all
+		if [[ $? -eq 0 ]] ; then 
+			make apps-fs
+		fi
+	fi
 fi
 
 make fs
